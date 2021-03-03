@@ -25,7 +25,7 @@ function find() { // EXERCISE A
   .count({number_of_steps: "st.step_id"})
 }
 
-function findById(scheme_id) { // EXERCISE B
+async function findById(scheme_id) { // EXERCISE B
   /*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
 
@@ -40,7 +40,15 @@ function findById(scheme_id) { // EXERCISE B
 
     2B- When you have a grasp on the query go ahead and build it in Knex
     making it parametric: instead of a literal `1` you should use `scheme_id`.
+  */
 
+  const results = await db({sc: 'schemes'})
+    .leftJoin({st: "steps"}, "sc.scheme_id", "st.scheme_id")
+    .where("sc.scheme_id", scheme_id)
+    .select("sc.scheme_name", "st.*")
+    .orderBy("st.step_number", "asc")
+
+ /*
     3B- Test in Postman and see that the resulting data does not look like a scheme,
     but more like an array of steps each including scheme information:
 
@@ -82,7 +90,33 @@ function findById(scheme_id) { // EXERCISE B
           // etc
         ]
       }
+    */
 
+   const id = results[0].scheme_id
+   const name = results[0].scheme_name
+  
+   const scheme = {
+      "scheme_id": id,
+      "scheme_name": name,
+      "steps": []
+    }
+
+  if(results[0].step_id){
+    scheme.steps = results.map(scheme => {
+        return {
+          step_id: scheme.step_id,
+          step_number: scheme.step_number,
+          instructions: scheme.instructions
+        }
+    })
+  }
+
+    return scheme
+
+
+
+
+    /*
     5B- This is what the result should look like _if there are no steps_ for a `scheme_id`:
 
       {

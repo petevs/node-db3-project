@@ -9,6 +9,26 @@ const db = require('../../data/db-config')
   }
 */
 const checkSchemeId = (req, res, next) => {
+  next()
+  // return async (req, res, next) => {
+  //   try {
+  //     const { id } = req.params
+  //     const scheme = await db('schemes')
+  //       .where({ id })
+  //       .first()
+
+  //       if(!scheme){
+  //         return res.status(404).json({
+  //           message: "Scheme not found"
+  //         })
+  //       }
+
+  //       req.scheme = scheme
+  //       next()
+  //   } catch(err) {
+  //     next(err)
+  //   }
+  // }
 
 }
 
