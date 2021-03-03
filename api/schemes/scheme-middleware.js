@@ -8,29 +8,25 @@ const db = require('../../data/db-config')
     "message": "scheme with scheme_id <actual id> not found"
   }
 */
-const checkSchemeId = (req, res, next) => {
-  next()
-  // return async (req, res, next) => {
-  //   try {
-  //     const { id } = req.params
-  //     const scheme = await db('schemes')
-  //       .where({ id })
-  //       .first()
+const checkSchemeId = async (req, res, next) => {
 
-  //       if(!scheme){
-  //         return res.status(404).json({
-  //           message: "Scheme not found"
-  //         })
-  //       }
+  try {
+    const scheme = await db('schemes')
+      .select('*')
+      .where("scheme_id", req.params.scheme_id)
 
-  //       req.scheme = scheme
-  //       next()
-  //   } catch(err) {
-  //     next(err)
-  //   }
-  // }
+    if(scheme.length < 1){
+      res.status(404).json({
+        message: `scheme with scheme_id ${req.params.scheme_id} not found`
+      })
+    }
 
-}
+    next()
+  } catch(err){
+    next(err)
+  }
+
+  }
 
 /*
   If `scheme_name` is missing, empty string or not a string:
