@@ -16,7 +16,7 @@ const checkSchemeId = async (req, res, next) => {
       .where("scheme_id", req.params.scheme_id)
 
     if(scheme.length < 1){
-      res.status(404).json({
+      return res.status(404).json({
         message: `scheme with scheme_id ${req.params.scheme_id} not found`
       })
     }
@@ -38,7 +38,7 @@ const checkSchemeId = async (req, res, next) => {
 */
 const validateScheme = (req, res, next) => {
   if(!req.body.scheme_name || typeof req.body.scheme_name !== 'string'){
-    res.status(400).json({
+    return res.status(400).json({
       message: "invalid scheme_name"
     })
   }
@@ -56,7 +56,7 @@ const validateScheme = (req, res, next) => {
 */
 const validateStep = (req, res, next) => {
   if(!req.body.instructions || typeof req.body.instructions !== 'string' || typeof req.body.step_number !== 'number' || req.body.step_number < 1){
-    res.status(400).json({
+    return res.status(400).json({
       "message": "invalid step"
     })
   }
